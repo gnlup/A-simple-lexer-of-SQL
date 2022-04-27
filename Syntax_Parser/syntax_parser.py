@@ -7,7 +7,7 @@ class grammar:
         self.term = set()  # 终结符：集合类型
         self.nterm = set()  # 非终结符：集合类型
         self.all_term = set()  # term+nterm：集合类型
-        self.productions_dict = {}  # 中间变量
+        self.productions_dict = {}  # 产生式key字典
         self.lr1_analyze_table = {}  # 分析表：字典
 
     # 读取txt，转换为产生式
@@ -21,7 +21,7 @@ class grammar:
             if right.find(' ') == -1:
                 right_list.append(right)
             else:
-                right_list = right.split(' ')
+                right_list += right.split(' ')
             production = {left: right_list}
             self.productions.append(production)
         for every in self.productions:
@@ -48,31 +48,31 @@ class grammar:
     #     pass
 
     # 获取first集 (抄的还没改
-    def get_firstset(self, status, all_elem):
-    #     if status in self.first_set:
-    #         return self.first_set[status]
-    #     all_elem.add(status)
-    #     cur_status_set = set()
-    #     for right_list in self.productions_dict[status]:
-    #         for right in right_list[0]:
-    #             right_set = None
-    #             if right in all_elem:
-    #                 continue
-    #             if right in self.first_set:
-    #                 right_set = self.first_set[right]
-    #             else:
-    #                 right_set = self.get_firstset(right, all_elem)
-    #             cur_status_set |= right_set
-    #             if '$' not in right_set:
-    #                 break
-    #     return cur_status_set
-        pass
-    # def init_firstset(self):
-    #     for term in self.term:
-    #         self.first_set[term] = {term}
-    #     for nterm in self.nterm:
-    #         self.first_set[nterm] = self.get_firstset(nterm, set())
-    #     print('firstset:\n', self.first_set)
+    def get_firstset(self, status, all_term):
+            if status in self.first_set:
+                 return self.first_set[status]
+          all_term.add(status)
+          cur_status_set = set()
+          for right_list in self.productions_dict[status]:
+              for right in right_list[0]:
+                  right_set = None
+                  if right in all_term:
+                      continue
+                  if right in self.first_set:
+                      right_set = self.first_set[right]
+                  else:
+                      right_set = self.get_firstset(right, all_term)
+                  cur_status_set |= right_set
+                  if '$' not in right_set:
+                      break
+          return cur_status_set
+        # pass
+      def init_firstset(self):
+          for term in self.term:
+              self.first_set[term] = {term}
+          for nterm in self.nterm:
+              self.first_set[nterm] = self.get_firstset(nterm, set())
+          print('firstset:\n', self.first_set)
 
     # 构造项目集规范族
     def generate_items(self):
