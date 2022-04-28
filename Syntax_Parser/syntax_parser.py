@@ -75,8 +75,30 @@ class grammar:
           print('firstset:\n', self.first_set)
 
     # 构造项目集规范族
-    def generate_items(self):
-        pass
+       def generate_items(self):
+        items=items[:]
+        for (prod_id, dot_pos, ahead) in self.items:
+            prod =self.productions[prod_id]
+            if dot_pos + 1 < len(prod):
+                cur = prod[dot_pos + 1]
+                nss = []
+                tmpseq = prod[dot_pos + 2:] + [ahead] # next_symbol = prod[dot_pos+2] if dot_pos+2 < len(prod) else ahead
+                i = 0
+                #first['$'] = ['$']
+                while i < len(tmpseq):
+                    for x in self.first_set[tmpseq[i]]:
+                        if (x != '$' or tmpseq[i] == '$') and x not in nss:
+                            nss.append(x)
+                    if '$' not in self.first_set[tmpseq[i]]:
+                        break
+                    i += 1
+                for next_symbol in nss:
+                    for ex_prod_id, ex_prod in enumerate(self.productions):
+                        if ex_prod[0] == cur:
+                            new_item = (ex_prod_id, 0, next_symbol)
+                            if new_item not in self.items:
+                                self.items.append(new_item)
+         return self.items
 
     # 构造DFA
     def DFA(self):
