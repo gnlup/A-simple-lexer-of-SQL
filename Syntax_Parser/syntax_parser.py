@@ -9,7 +9,7 @@ class grammar:
         self.all_term = set()  # term+nterm：集合类型
         self.productions_dict = {}  # 产生式key字典
         self.lr1_analyze_table = {}  # 分析表：字典
-
+        self.items=[] #规范项目集
     # 读取txt，转换为产生式
     def read_grammar(self, file_name):
         for line in open(file_name, 'r'):
@@ -47,7 +47,7 @@ class grammar:
     # def termornot(self):
     #     pass
 
-    # 获取first集 (抄的还没改
+    # 获取first集 
     def get_firstset(self, status, all_term):
             if status in self.first_set:
                  return self.first_set[status]
@@ -74,11 +74,26 @@ class grammar:
               self.first_set[nterm] = self.get_firstset(nterm, set())
           print('firstset:\n', self.first_set)
 
-    # 构造项目集规范族
-       def generate_items(self):
+    def init_items(self,file_name):
+            for line in open(file_name, 'r'):
+                line = line[:-1]
+                left = line.split(' -> ')[0]
+                right = line.split(' -> ')[1]
+                right_list = ['.']
+                right.strip(' ')
+                if right.find(' ') == -1:
+                    right_list.append(right)
+                else:
+                    right_list = right.split(' ')
+                item = {left: right_list}
+                self.items.append(item)
+            for every in self.items:
+                print(every)
+            
+    def generate_items(self,productions,items,first_set):
         items=items[:]
-        for (prod_id, dot_pos, ahead) in self.items:
-            prod =self.productions[prod_id]
+        for (prod_id, dot_pos, ahead) in items:
+            prod =productions[prod_id]
             if dot_pos + 1 < len(prod):
                 cur = prod[dot_pos + 1]
                 nss = []
@@ -86,19 +101,31 @@ class grammar:
                 i = 0
                 #first['$'] = ['$']
                 while i < len(tmpseq):
-                    for x in self.first_set[tmpseq[i]]:
+                    for x in first_set[tmpseq[i]]:
                         if (x != '$' or tmpseq[i] == '$') and x not in nss:
                             nss.append(x)
-                    if '$' not in self.first_set[tmpseq[i]]:
+                    if '$' not in first_set[tmpseq[i]]:
                         break
                     i += 1
                 for next_symbol in nss:
-                    for ex_prod_id, ex_prod in enumerate(self.productions):
+                    for ex_prod_id, ex_prod in enumerate(productions):
                         if ex_prod[0] == cur:
                             new_item = (ex_prod_id, 0, next_symbol)
-                            if new_item not in self.items:
-                                self.items.append(new_item)
-         return self.items
+                            if new_item not in items:
+                                items.append(new_item)
+        return items
+
+    def goto(self,productions,items,a,first_set):
+        ans=[]
+        for(i,j,k) in items:
+            production=productions[i]
+            if j+1 < len(production):
+                cur=production[j+1]
+                if cur==a:
+                    new_item=(i,j+1,k)
+                    if new_item not in ans:
+                        ans.append(new_item)
+        return self.generate_items(self,productions, ans, first_set)
 
     # 构造DFA
     def DFA(self):
