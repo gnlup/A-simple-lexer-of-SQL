@@ -1,5 +1,7 @@
-# import xlrd
-# 初始化 v1---
+import xlwt
+
+
+# 初始化 v2-----
 class grammar:
     # 定义
     def __init__(self):
@@ -51,6 +53,7 @@ class grammar:
                 for right in production[left]:
                     self.all_term.add(right)
         self.term = self.all_term - self.nterm
+        # 为构造项目集规范族展望符#
         self.term.add('#')
         # print('term:\n', self.term)
         # print('nterm:\n', self.nterm)
@@ -80,6 +83,7 @@ class grammar:
             self.first_set[term] = {term}
         for nterm in self.nterm:
             self.first_set[nterm] = self.get_firstset(nterm, set())
+        # 有待考证 不过删掉没影响
         self.first_set['#'] = {'#'}
 
     def gram_inf(self):
@@ -105,6 +109,22 @@ class grammar:
         for every in sorted(self.all_term, key=str.lower):
             print("first_set[", every, "]  =  ", list(self.first_set[every]), file=f)
         f.close()
+
+
+# 生成单元格样式的方法
+def title_style():
+    # 创建字体
+    font = xlwt.Font()
+    # 字体类型
+    font.name = 'Times New Roman'
+    # 设置字体大小
+    font.height = 20 * 18
+    font.bold = True
+    style = xlwt.XFStyle()  # 创建style
+    style.alignment.vert = 1
+    style.alignment.horz = 2
+    style.font = font  # style的字体为上面定义的字体
+    return style
 
 
 # lr(1)分析法
@@ -142,10 +162,10 @@ class lr1_grammar(grammar):
                 i = 0
                 while i < len(tmpseq):
                     for x in self.first_set[tmpseq[i]]:
-                        if (x != '#' or tmpseq[i] == '#') and x not in nss:
+                        if (x != '$' or tmpseq[i] == '$') and x not in nss:
                             nss.append(x)
                             # print(x)
-                    if '#' not in self.first_set[tmpseq[i]]:
+                    if '$' not in self.first_set[tmpseq[i]]:
                         break
                     i += 1
                     # print(i)
@@ -177,33 +197,37 @@ class lr1_grammar(grammar):
     #     item0 = self.closure([(0, 0, '$')])
     #     # print("temp", item0)
     def init_lr1grammar(self):
-        pass
+        self.dic2list()
 
     @staticmethod
     def prod2str(prod, dotpos):
         prod = prod[:]
         prod.append("")
-        prod[dotpos + 1] = '·' + prod[dotpos + 1]
-        return prod[0] + '→' + ''.join(prod[1:])
+        prod[dotpos + 1] = ' · ' + prod[dotpos + 1]
+        return prod[0] + ' ->' + ''.join(prod[1:])
 
+    # 有点不对劲。。。
     def generate_items(self):
+        f = open('lr1_items.txt', 'w')
         self.term = sorted(self.term, key=str.lower)
         self.nterm = sorted(self.nterm, key=str.lower)
-        I0 = self.closure([(0, 0, '#')])  # I0
+        self.lr1_analyze_table = [{}]
+        I0 = self.closure([(0, 0, '#')])  # I0 正确
         cc = [I0]  # 项目集规范族
         i = 0
         while i < len(cc):
             ccc = {}
             for j in cc[i]:
-                if (j[0], j[1]) not in ccc.keys():
-                    ccc[(j[0], j[1])] = j[2]  # j[2] 展望符
-                else:
-                    ccc[(j[0], j[1])] = j[2]  # ( j[0] 产生式ID j[1] dot_position)
+                # if (j[0], j[1]) not in ccc.keys():
+                #     ccc[(j[0], j[1])] = j[2]  # j[2] 展望符
+                # else:
+                ccc[(j[0], j[1])] = j[2]  # ( j[0] 产生式ID j[1] dot_position)
+            # 其实就是（产生式, dot_position , 展望符）三元组
             ccc = [[i[0], i[1], j] for i, j in ccc.items()]
             print("[I%d]:\n  " % i,
                   '\n   '.join(self.prod2str(self.lr1_productions[j[0]], j[1]) + ' \t' + j[2] for j in ccc),
-                  end="\n   ")
-            candiwords = []
+                  end="\n   ", file=f)
+            candiwords = []  # goto的转移的输入字符
             for j in cc[i]:  # I[i]
                 prod = self.lr1_productions[j[0]]
                 dot_pos = j[1] + 1
@@ -214,35 +238,38 @@ class lr1_grammar(grammar):
                         # if j[2] not in self.lr1_analyze_table[i].keys(): # 没有字符那一列
                         #     self.lr1_analyze_table[i][j[2]] = 'r%d' % j[0]
                         # else:
-                        self.lr1_analyze_table[i][j[2]] = 'r%d' % j[0]
+                        self.lr1_analyze_table[i][j[2]] = 'r%d' % j[0]  # 规约项目
                     else:
                         # if '#' not in self.lr1_analyze_table[i].keys():
                         #     self.lr1_analyze_table[i]['#'] = 'acc'
                         # else:
                         # self.lr1_analyze_table[i]['#'] += 'acc'
-                        self.lr1_analyze_table[i]['#'] = 'acc'
+                        self.lr1_analyze_table[i]['#'] = 'acc'  # 接收项目
             for j in candiwords:
-                tmp = self.goto(cc[i], j)
+                tmp = self.goto(cc[i], j)  # tmp 新生成的项目族
                 # print(tmp)
                 if len(tmp) > 0 and tmp not in cc:
+                    # “假装去重”雾。。。
                     cc.append(tmp)
                     # print(tmp)
                     self.lr1_analyze_table.append({})
                 if len(tmp) > 0:
-                    print(j, cc.index(tmp), sep=",", end="  ")
+                    # 导致状态转移输入的字符
+                    # print(j, cc.index(tmp), sep=",", end="  ", file=f)
                     if j in self.term:
                         # if j not in self.lr1_analyze_table[i].keys():
                         #     self.lr1_analyze_table[i][j] = "s%d" % cc.index(tmp)
                         # else:
-                        self.lr1_analyze_table[i][j] = "s%d" % cc.index(tmp)
+                        self.lr1_analyze_table[i][j] = "s%d" % cc.index(tmp)  # 移进项目
                     else:
-                        self.lr1_analyze_table[i][j] = "%d" % cc.index(tmp)
+                        self.lr1_analyze_table[i][j] = "%d" % cc.index(tmp)  # goto
             i += 1
-            print("\033[0m")
+            print("\033[0m", file=f)
         self.analysis_table()
+        f.close()
 
     def analysis_table(self):
-        f = open('analysis.txt', 'w')
+        f = open('analysis—table.txt', 'w')
         head = ['I']
         for j in self.term:
             head.append(j)
@@ -250,9 +277,17 @@ class lr1_grammar(grammar):
             if j == "root":
                 continue
             head.append(j)
+        # txt print
         print('---'.join('' + '-' * 30 for _ in head), file=f)
         print(' | '.join(i + ' ' * (30 - len(i)) for i in head), file=f)
         print('-+-'.join('' + '-' * 30 for _ in head), file=f)
+        # excel print
+        mystyle = title_style()
+        workbook = xlwt.Workbook(encoding='ascii')
+        worksheet = workbook.add_sheet('demo')
+        for i, element in enumerate(head):
+            worksheet.write(0, i, element, mystyle)
+
         for i, line in enumerate(self.lr1_analyze_table):
             lo = [str(i)]
             for j in self.term:
@@ -268,10 +303,10 @@ class lr1_grammar(grammar):
                 else:
                     lo.append("")
             print(' | '.join(i + ' ' * (30 - len(i)) for i in lo), file=f)
+            for ind, e in enumerate(lo):
+                worksheet.write(i + 1, ind, e, mystyle)
         f.close()
-    #
-    # def print_table(self):
-    #     pass
+        workbook.save('lr1预测分析表.xls')
 
 
 class parse_grammar(lr1_grammar):
@@ -283,9 +318,12 @@ class parse_grammar(lr1_grammar):
         self.stack_state = [0]
         self.cur_token = '#'
         self.cur_state = 0
-        self.input_ptr=0
-        self.last_token='#'
-        self.dollar_flg=0
+        self.input_ptr = 0
+        self.last_token = '#'
+        self.dollar_flg = 0
+        self.par_seq = 0
+        self.f = open('procedure.txt', 'w')
+        self.par_times = 1
 
     def init_parser(self, filename):
         for line in open(filename, "r"):
@@ -294,22 +332,26 @@ class parse_grammar(lr1_grammar):
                 self.tokens.append(line)
             else:
                 print(self.tokens)
+                print("times is :%d !!!\n"%self.par_times,self.tokens, file=self.f)
                 self.tokens.append("#")
                 self.syntax_parser()
                 self.tokens = []
 
     def syntax_parser(self):
+        self.par_times += 1
         self.input_ptr = 0
-        self.stack_token=['#']
-        self.stack_state=[0]
+        self.stack_token = ['#']
+        self.stack_state = [0]
         self.dollar_flg = 0
+        self.par_seq = 0
         while len(self.stack_token) > 0:
             # print(self.input_ptr)
+            print("\tstack_token", self.stack_token, file=self.f)
+            print("\tcur_str", self.tokens[self.input_ptr:], file=self.f)
             self.cur_token = self.tokens[self.input_ptr]
             self.cur_state = self.stack_state[-1]
             if self.dollar_flg:
-                self.cur_token=self.last_token
-
+                self.cur_token = self.last_token
             if self.cur_token not in self.lr1_analyze_table[self.cur_state].keys():
                 if self.lr1_analyze_table[self.cur_state].get('$') is not None:
                     self.last_token = self.cur_token
@@ -321,40 +363,62 @@ class parse_grammar(lr1_grammar):
                         break
                 else:
                     print("errorA")
+                    print("errorA\n\n", file=self.f)
                     break
             else:  # break
-            # if self.cur_token not in self.lr1_analyze_table[self.cur_state].keys():
-            #     print("errorA")
-            #     # errorA
-            #     break
-                self.dollar_flg=0
+                # if self.cur_token not in self.lr1_analyze_table[self.cur_state].keys():
+                #     print("errorA")
+                #     # errorA
+                #     break
+                self.par_seq += 1
+                self.dollar_flg = 0
                 action = self.lr1_analyze_table[self.cur_state][self.cur_token]
                 rst = self.stack_action(action)
                 if rst == 0:
                     break
 
     def stack_action(self, action):
+        if self.dollar_flg == 1:
+            face_token = self.last_token
+        else:
+            face_token = self.cur_token
+        ptr = -1
+        while self.stack_token[ptr] == '$':
+            ptr -= 1
+        # print("stack_tokens now", self.stack_token[-1])
+        # print("cur_token",self.cur_token)
         if action == "acc":
-            print("accept")
+            if self.dollar_flg == 0:
+                print("%d\t1\t%s#%s" % (self.par_seq, self.stack_token[ptr], face_token), "\taccept")
+                print("%d\t1\t%s#%s" % (self.par_seq, self.stack_token[ptr], face_token), "\taccept\n\n", file=self.f)
             return 0
             # break
         elif action[0] == 's':
+            if self.dollar_flg == 0:
+                print("%d\t/\t%s#%s" % (self.par_seq, self.stack_token[ptr], face_token), "\tmove")
+                print("%d\t/\t%s#%s" % (self.par_seq, self.stack_token[ptr], face_token), "\tmove", file=self.f)
             next_state = int(action[1:])
             self.stack_token.append(self.cur_token)
             self.stack_state.append(next_state)
-            if self.dollar_flg==0:
+            if self.dollar_flg == 0:
                 self.input_ptr += 1
-            print("move", self.cur_token)
+            # print("%d\t/\tmove" % self.par_seq, self.cur_token)
             return 1
         else:
             prod_id = int(action[1:])
             prod_len = len(self.lr1_productions[prod_id]) - 1
-            print("reduction", self.lr1_productions[prod_id])
+            if self.dollar_flg == 0:
+                print("%d\t%d\t%s#%s" % (self.par_seq, prod_id + 1, self.stack_token[ptr], face_token), "\treduction",
+                      "%s -> " % self.lr1_productions[prod_id][0], "  ".join(self.lr1_productions[prod_id][1:]))
+                print("%d\t%d\t%s#%s" % (self.par_seq, prod_id + 1, self.stack_token[ptr], face_token), "\treduction",
+                      "%s -> " % self.lr1_productions[prod_id][0], "  ".join(self.lr1_productions[prod_id][1:]),
+                      file=self.f)
             self.stack_token = self.stack_token[:-prod_len]
             self.stack_state = self.stack_state[:-prod_len]
             self.cur_state = self.stack_state[-1]
             goto_nt = self.lr1_productions[prod_id][0]
             if goto_nt not in self.lr1_analyze_table[self.cur_state].keys():
+                print("errorB\n\n", file=self.f)
                 print("errorB")
                 # error B
                 return 0
@@ -370,12 +434,13 @@ def main():
     g = parse_grammar()
     # g.init_grammar('grammar_simple.txt')
     g.init_grammar('grammar.txt')
-    g.dic2list()
+    g.init_lr1grammar()
+    # g.dic2list()
     g.generate_items()
-    g.analysis_table()
+    # g.analysis_table()
     # g.print_table()
-    g.init_parser('table.txt')
-    # g.init_parser('table2.txt')
+    g.init_parser('token.txt')
+    # g.init_parser('token2.txt')
     # g.syntax_parser()
 
 
