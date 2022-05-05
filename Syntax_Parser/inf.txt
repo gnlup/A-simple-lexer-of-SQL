@@ -48,94 +48,101 @@ production:
 47  :  {'uidListRec': ['$']}
 48  :  {'uid': ['IDN']}
 49  :  {'fullColumnName': ['uid', 'dottedId']}
-50  :  {'dottedId': ['.', 'uid']}
+50  :  {'dottedId': ['.', 'dottedIdOrStar']}
 51  :  {'dottedId': ['$']}
-52  :  {'expressions': ['expression', 'expressionRec']}
-53  :  {'expressionRec': [',', 'expression', 'expressionRec']}
-54  :  {'expressionRec': ['$']}
-55  :  {'expression': ['opposite', 'expression']}
-56  :  {'expression': ['predicate', 'expressionRight']}
-57  :  {'expressionRight': ['logicalOperator', 'expression']}
-58  :  {'expressionRight': ['IS', 'oppositeOrNot', 'trueValue']}
-59  :  {'expressionRight': ['$']}
-60  :  {'opposite': ['NOT']}
-61  :  {'opposite': ['!']}
-62  :  {'oppositeOrNot': ['NOT']}
-63  :  {'oppositeOrNot': ['$']}
-64  :  {'trueValue': ['TRUE']}
-65  :  {'trueValue': ['FALSE']}
-66  :  {'trueValue': ['UNKNOWN']}
-67  :  {'predicate': ['expressionAtom', 'predicateRight']}
-68  :  {'predicateRight': ['comparisonOperator', 'predicate']}
-69  :  {'predicateRight': ['$']}
-70  :  {'expressionAtom': ['constant']}
-71  :  {'expressionAtom': ['fullColumnName']}
-72  :  {'expressionAtom': ['functionCall']}
-73  :  {'constant': ['stringLiteral']}
-74  :  {'constant': ['decimalLiteral']}
-75  :  {'constant': ['-', 'decimalLiteral']}
-76  :  {'constant': ['booleanLiteral']}
-77  :  {'decimalLiteral': ['FLOAT']}
-78  :  {'decimalLiteral': ['INT']}
-79  :  {'comparisonOperator': ['=']}
-80  :  {'comparisonOperator': ['>']}
-81  :  {'comparisonOperator': ['<']}
-82  :  {'comparisonOperator': ['<=']}
-83  :  {'comparisonOperator': ['>=']}
-84  :  {'comparisonOperator': ['!=']}
-85  :  {'comparisonOperator': ['<=>']}
-86  :  {'logicalOperator': ['AND']}
-87  :  {'logicalOperator': ['&&']}
-88  :  {'logicalOperator': ['XOR']}
-89  :  {'logicalOperator': ['OR']}
-90  :  {'logicalOperator': ['||']}
-91  :  {'stringLiteral': ['STRING']}
-92  :  {'booleanLiteral': ['TRUE']}
-93  :  {'booleanLiteral': ['FALSE']}
-94  :  {'functionCall': ['aggregateWindowedFunction']}
-95  :  {'aggregateWindowedFunction': ['function', '(', 'unionType', 'fullColumnName', ')']}
-96  :  {'function': ['AVG']}
-97  :  {'function': ['MAX']}
-98  :  {'function': ['MIN']}
-99  :  {'function': ['SUM']}
-100 : {'joinPart': ['JOIN', 'tableSourceItem', 'joinRightPart']}
-101 : {'joinPart': ['joinDirection', 'JOIN', 'tableSourceItem', 'ON', 'expression']}
-102 : {'joinRightPart': ['ON', 'expression']}
-103 : {'joinRightPart': ['$']}
-104 : {'joinDirection': ['LEFT']}
-105 : {'joinDirection': ['RIGHT']}
-106 : {'insertStatement': ['insertKeyword', 'tableName', 'insertStatementRight']}
-107 : {'insertStatementRight': ['insertStatementValue']}
-108 : {'insertStatementRight': ['(', 'uidList', ')', 'insertStatementValue']}
-109 : {'insertKeyword': ['INSERT', 'into']}
-110 : {'into': ['INTO']}
-111 : {'into': ['$']}
-112 : {'insertStatementValue': ['insertFormat', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec']}
-113 : {'insertFormat': ['VALUES']}
-114 : {'insertFormat': ['VALUE']}
-115 : {'expressionsWithDefaultsListRec': [',', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec']}
-116 : {'expressionsWithDefaultsListRec': ['$']}
-117 : {'expressionsWithDefaults': ['expressionOrDefault', 'expressionOrDefaultListRec']}
-118 : {'expressionsWithDefaults': ['$']}
-119 : {'expressionOrDefaultListRec': [',', 'expressionOrDefault', 'expressionOrDefaultListRec']}
-120 : {'expressionOrDefaultListRec': ['$']}
-121 : {'expressionOrDefault': ['expression']}
-122 : {'expressionOrDefault': ['DEFAULT']}
-123 : {'updateStatement': ['UPDATE', 'tableName', 'elementNameAlias', 'SET', 'updatedElement', 'updatedElementListRec', 'whereExpression']}
-124 : {'updatedElementListRec': [',', 'updatedElement', 'updatedElementListRec']}
-125 : {'updatedElementListRec': ['$']}
-126 : {'whereExpression': ['WHERE', 'expression']}
-127 : {'whereExpression': ['$']}
-128 : {'updatedElement': ['fullColumnName', '=', 'expressionOrDefault']}
-129 : {'deleteStatement': ['DELETE', 'FROM', 'tableName', 'deleteStatementRight']}
-130 : {'deleteStatementRight': ['whereExpression']}
-131 : {'deleteStatementRight': ['(', 'uidList', ')', 'whereExpression']}
+52  :  {'dottedIdOrStar': ['uid']}
+53  :  {'dottedIdOrStar': ['*']}
+54  :  {'expressions': ['expression', 'expressionRec']}
+55  :  {'expressionRec': [',', 'expression', 'expressionRec']}
+56  :  {'expressionRec': ['$']}
+57  :  {'expression': ['opposite', 'expression']}
+58  :  {'expression': ['predicate', 'expressionRight']}
+59  :  {'expressionRight': ['logicalOperator', 'expression']}
+60  :  {'expressionRight': ['IS', 'oppositeOrNot', 'nullOrTrueValue']}
+61  :  {'expressionRight': ['$']}
+62  :  {'opposite': ['NOT']}
+63  :  {'opposite': ['!']}
+64  :  {'oppositeOrNot': ['NOT']}
+65  :  {'oppositeOrNot': ['$']}
+66  :  {'nullOrTrueValue': ['nullValue']}
+67  :  {'nullOrTrueValue': ['trueValue']}
+68  :  {'nullValue': ['NULL']}
+69  :  {'trueValue': ['TRUE']}
+70  :  {'trueValue': ['FALSE']}
+71  :  {'trueValue': ['UNKNOWN']}
+72  :  {'predicate': ['expressionAtom', 'predicateRight']}
+73  :  {'predicateRight': ['comparisonOperator', 'predicate']}
+74  :  {'predicateRight': ['$']}
+75  :  {'expressionAtom': ['constant']}
+76  :  {'expressionAtom': ['fullColumnName']}
+77  :  {'expressionAtom': ['functionCall']}
+78  :  {'nullNotnull': ['oppositeOrNot', 'NULL']}
+79  :  {'constant': ['stringLiteral']}
+80  :  {'constant': ['decimalLiteral']}
+81  :  {'constant': ['-', 'decimalLiteral']}
+82  :  {'constant': ['booleanLiteral']}
+83  :  {'decimalLiteral': ['FLOAT']}
+84  :  {'decimalLiteral': ['INT']}
+85  :  {'comparisonOperator': ['=']}
+86  :  {'comparisonOperator': ['>']}
+87  :  {'comparisonOperator': ['<']}
+88  :  {'comparisonOperator': ['<=']}
+89  :  {'comparisonOperator': ['>=']}
+90  :  {'comparisonOperator': ['!=']}
+91  :  {'comparisonOperator': ['<=>']}
+92  :  {'logicalOperator': ['AND']}
+93  :  {'logicalOperator': ['&&']}
+94  :  {'logicalOperator': ['XOR']}
+95  :  {'logicalOperator': ['OR']}
+96  :  {'logicalOperator': ['||']}
+97  :  {'stringLiteral': ['STRING']}
+98  :  {'booleanLiteral': ['TRUE']}
+99  :  {'booleanLiteral': ['FALSE']}
+100 : {'functionCall': ['aggregateWindowedFunction']}
+101 : {'aggregateWindowedFunction': ['function', '(', 'unionType', 'fullColumnName', ')']}
+102 : {'function': ['AVG']}
+103 : {'function': ['MAX']}
+104 : {'function': ['MIN']}
+105 : {'function': ['SUM']}
+106 : {'joinPart': ['JOIN', 'tableSourceItem', 'joinRightPart']}
+107 : {'joinPart': ['joinDirection', 'JOIN', 'tableSourceItem', 'ON', 'expression']}
+108 : {'joinRightPart': ['ON', 'expression']}
+109 : {'joinRightPart': ['$']}
+110 : {'joinDirection': ['LEFT']}
+111 : {'joinDirection': ['RIGHT']}
+112 : {'insertStatement': ['insertKeyword', 'tableName', 'insertStatementRight']}
+113 : {'insertStatementRight': ['insertStatementValue']}
+114 : {'insertStatementRight': ['(', 'uidList', ')', 'insertStatementValue']}
+115 : {'insertKeyword': ['INSERT', 'into']}
+116 : {'into': ['INTO']}
+117 : {'into': ['$']}
+118 : {'insertStatementValue': ['insertFormat', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec']}
+119 : {'insertFormat': ['VALUES']}
+120 : {'insertFormat': ['VALUE']}
+121 : {'expressionsWithDefaultsListRec': [',', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec']}
+122 : {'expressionsWithDefaultsListRec': ['$']}
+123 : {'expressionsWithDefaults': ['expressionOrDefault', 'expressionOrDefaultListRec']}
+124 : {'expressionsWithDefaults': ['$']}
+125 : {'expressionOrDefaultListRec': [',', 'expressionOrDefault', 'expressionOrDefaultListRec']}
+126 : {'expressionOrDefaultListRec': ['$']}
+127 : {'expressionOrDefault': ['expression']}
+128 : {'expressionOrDefault': ['DEFAULT']}
+129 : {'updateStatement': ['UPDATE', 'tableName', 'elementNameAlias', 'SET', 'updatedElement', 'updatedElementListRec', 'whereExpression']}
+130 : {'updatedElementListRec': [',', 'updatedElement', 'updatedElementListRec']}
+131 : {'updatedElementListRec': ['$']}
+132 : {'whereExpression': ['WHERE', 'expression']}
+133 : {'whereExpression': ['$']}
+134 : {'updatedElement': ['fullColumnName', '=', 'expressionOrDefault']}
+135 : {'deleteStatement': ['DELETE', 'FROM', 'tableName', 'deleteStatementRight']}
+136 : {'deleteStatementRight': ['whereExpression']}
+137 : {'deleteStatementRight': ['(', 'uidList', ')', 'whereExpression']}
+{'root': [(['dmlStatement'], 0)], 'dmlStatement': [(['selectStatement'], 1), (['insertStatement'], 2), (['updateStatement'], 3), (['deleteStatement'], 4)], 'selectStatement': [(['querySpecification', 'unionStatements'], 5)], 'unionStatements': [(['unionStatement', 'unionStatements'], 6), (['$'], 7)], 'unionStatement': [(['unionStatementKey', 'unionStatementQuery'], 8)], 'unionStatementKey': [(['UNION', 'unionType'], 9)], 'unionStatementQuery': [(['querySpecification'], 10)], 'unionType': [(['ALL'], 11), (['DISTINCT'], 12), (['$'], 13)], 'querySpecification': [(['SELECT', 'unionType', 'selectElements', 'selectClause'], 14), (['(', 'querySpecification', ')'], 15)], 'selectClause': [(['fromClause', 'groupByClause', 'havingClause', 'orderByClause'], 16)], 'fromClause': [(['FROM', 'tableSources', 'whereExpression'], 17), (['$'], 18)], 'groupByClause': [(['GROUP BY', 'expressions'], 19), (['$'], 20)], 'havingClause': [(['HAVING', 'expression'], 21), (['$'], 22)], 'orderByClause': [(['ORDER BY', 'expressions'], 23), (['$'], 24)], 'selectElements': [(['selectElementHead', 'selectElementListRec'], 25)], 'selectElementHead': [(['*'], 26), (['selectElement'], 27)], 'selectElementListRec': [([',', 'selectElement', 'selectElementListRec'], 28), (['$'], 29)], 'selectElement': [(['fullColumnName', 'elementNameAlias'], 30), (['functionCall', 'elementNameAlias'], 31)], 'elementNameAlias': [(['uid'], 32), (['AS', 'uid'], 33), (['$'], 34)], 'tableSources': [(['tableSource', 'tableSourceListRec'], 35)], 'tableSourceListRec': [([',', 'tableSource', 'tableSourceListRec'], 36), (['$'], 37)], 'tableSource': [(['tableSourceItem', 'joinParts'], 38)], 'joinParts': [(['joinPart', 'joinParts'], 39), (['$'], 40)], 'tableSourceItem': [(['tableName', 'elementNameAlias'], 41), (['(', 'tableSources', ')'], 42)], 'tableName': [(['uid'], 43)], 'uidList': [(['uid', 'uidListRec'], 44)], 'uidListRec': [([',', 'uid', 'uidListRec'], 45), (['$'], 46)], 'uid': [(['IDN'], 47)], 'fullColumnName': [(['uid', 'dottedId'], 48)], 'dottedId': [(['.', 'dottedIdOrStar'], 49), (['$'], 50)], 'dottedIdOrStar': [(['uid'], 51), (['*'], 52)], 'expressions': [(['expression', 'expressionRec'], 53)], 'expressionRec': [([',', 'expression', 'expressionRec'], 54), (['$'], 55)], 'expression': [(['opposite', 'expression'], 56), (['predicate', 'expressionRight'], 57)], 'expressionRight': [(['logicalOperator', 'expression'], 58), (['IS', 'oppositeOrNot', 'nullOrTrueValue'], 59), (['$'], 60)], 'opposite': [(['NOT'], 61), (['!'], 62)], 'oppositeOrNot': [(['NOT'], 63), (['$'], 64)], 'nullOrTrueValue': [(['nullValue'], 65), (['trueValue'], 66)], 'nullValue': [(['NULL'], 67)], 'trueValue': [(['TRUE'], 68), (['FALSE'], 69), (['UNKNOWN'], 70)], 'predicate': [(['expressionAtom', 'predicateRight'], 71)], 'predicateRight': [(['comparisonOperator', 'predicate'], 72), (['$'], 73)], 'expressionAtom': [(['constant'], 74), (['fullColumnName'], 75), (['functionCall'], 76)], 'nullNotnull': [(['oppositeOrNot', 'NULL'], 77)], 'constant': [(['stringLiteral'], 78), (['decimalLiteral'], 79), (['-', 'decimalLiteral'], 80), (['booleanLiteral'], 81)], 'decimalLiteral': [(['FLOAT'], 82), (['INT'], 83)], 'comparisonOperator': [(['='], 84), (['>'], 85), (['<'], 86), (['<='], 87), (['>='], 88), (['!='], 89), (['<=>'], 90)], 'logicalOperator': [(['AND'], 91), (['&&'], 92), (['XOR'], 93), (['OR'], 94), (['||'], 95)], 'stringLiteral': [(['STRING'], 96)], 'booleanLiteral': [(['TRUE'], 97), (['FALSE'], 98)], 'functionCall': [(['aggregateWindowedFunction'], 99)], 'aggregateWindowedFunction': [(['function', '(', 'unionType', 'fullColumnName', ')'], 100)], 'function': [(['AVG'], 101), (['MAX'], 102), (['MIN'], 103), (['SUM'], 104)], 'joinPart': [(['JOIN', 'tableSourceItem', 'joinRightPart'], 105), (['joinDirection', 'JOIN', 'tableSourceItem', 'ON', 'expression'], 106)], 'joinRightPart': [(['ON', 'expression'], 107), (['$'], 108)], 'joinDirection': [(['LEFT'], 109), (['RIGHT'], 110)], 'insertStatement': [(['insertKeyword', 'tableName', 'insertStatementRight'], 111)], 'insertStatementRight': [(['insertStatementValue'], 112), (['(', 'uidList', ')', 'insertStatementValue'], 113)], 'insertKeyword': [(['INSERT', 'into'], 114)], 'into': [(['INTO'], 115), (['$'], 116)], 'insertStatementValue': [(['insertFormat', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec'], 117)], 'insertFormat': [(['VALUES'], 118), (['VALUE'], 119)], 'expressionsWithDefaultsListRec': [([',', '(', 'expressionsWithDefaults', ')', 'expressionsWithDefaultsListRec'], 120), (['$'], 121)], 'expressionsWithDefaults': [(['expressionOrDefault', 'expressionOrDefaultListRec'], 122), (['$'], 123)], 'expressionOrDefaultListRec': [([',', 'expressionOrDefault', 'expressionOrDefaultListRec'], 124), (['$'], 125)], 'expressionOrDefault': [(['expression'], 126), (['DEFAULT'], 127)], 'updateStatement': [(['UPDATE', 'tableName', 'elementNameAlias', 'SET', 'updatedElement', 'updatedElementListRec', 'whereExpression'], 128)], 'updatedElementListRec': [([',', 'updatedElement', 'updatedElementListRec'], 129), (['$'], 130)], 'whereExpression': [(['WHERE', 'expression'], 131), (['$'], 132)], 'updatedElement': [(['fullColumnName', '=', 'expressionOrDefault'], 133)], 'deleteStatement': [(['DELETE', 'FROM', 'tableName', 'deleteStatementRight'], 134)], 'deleteStatementRight': [(['whereExpression'], 135), (['(', 'uidList', ')', 'whereExpression'], 136)]}
 
 term:
- ['!', '!=', '$', '&&', '(', ')', '*', ',', '-', '.', '<', '<=', '<=>', '=', '>', '>=', 'ALL', 'AND', 'AS', 'AVG', 'DEFAULT', 'DELETE', 'DISTINCT', 'FALSE', 'FLOAT', 'FROM', 'GROUP BY', 'HAVING', 'IDN', 'INSERT', 'INT', 'INTO', 'IS', 'JOIN', 'LEFT', 'MAX', 'MIN', 'NOT', 'ON', 'OR', 'ORDER BY', 'RIGHT', 'SELECT', 'SET', 'STRING', 'SUM', 'TRUE', 'UNION', 'UNKNOWN', 'UPDATE', 'VALUE', 'VALUES', 'WHERE', 'XOR', '||']
+ ['!', '!=', '#', '$', '&&', '(', ')', '*', ',', '-', '.', '<', '<=', '<=>', '=', '>', '>=', 'ALL', 'AND', 'AS', 'AVG', 'DEFAULT', 'DELETE', 'DISTINCT', 'FALSE', 'FLOAT', 'FROM', 'GROUP BY', 'HAVING', 'IDN', 'INSERT', 'INT', 'INTO', 'IS', 'JOIN', 'LEFT', 'MAX', 'MIN', 'NOT', 'NULL', 'ON', 'OR', 'ORDER BY', 'RIGHT', 'SELECT', 'SET', 'STRING', 'SUM', 'TRUE', 'UNION', 'UNKNOWN', 'UPDATE', 'VALUE', 'VALUES', 'WHERE', 'XOR', '||']
 
 nterm:
- ['aggregateWindowedFunction', 'booleanLiteral', 'comparisonOperator', 'constant', 'decimalLiteral', 'deleteStatement', 'deleteStatementRight', 'dmlStatement', 'dottedId', 'elementNameAlias', 'expression', 'expressionAtom', 'expressionOrDefault', 'expressionOrDefaultListRec', 'expressionRec', 'expressionRight', 'expressions', 'expressionsWithDefaults', 'expressionsWithDefaultsListRec', 'fromClause', 'fullColumnName', 'function', 'functionCall', 'groupByClause', 'havingClause', 'insertFormat', 'insertKeyword', 'insertStatement', 'insertStatementRight', 'insertStatementValue', 'into', 'joinDirection', 'joinPart', 'joinParts', 'joinRightPart', 'logicalOperator', 'opposite', 'oppositeOrNot', 'orderByClause', 'predicate', 'predicateRight', 'querySpecification', 'root', 'selectClause', 'selectElement', 'selectElementHead', 'selectElementListRec', 'selectElements', 'selectStatement', 'stringLiteral', 'tableName', 'tableSource', 'tableSourceItem', 'tableSourceListRec', 'tableSources', 'trueValue', 'uid', 'uidList', 'uidListRec', 'unionStatement', 'unionStatementKey', 'unionStatementQuery', 'unionStatements', 'unionType', 'updatedElement', 'updatedElementListRec', 'updateStatement', 'whereExpression']
+ ['aggregateWindowedFunction', 'booleanLiteral', 'comparisonOperator', 'constant', 'decimalLiteral', 'deleteStatement', 'deleteStatementRight', 'dmlStatement', 'dottedId', 'dottedIdOrStar', 'elementNameAlias', 'expression', 'expressionAtom', 'expressionOrDefault', 'expressionOrDefaultListRec', 'expressionRec', 'expressionRight', 'expressions', 'expressionsWithDefaults', 'expressionsWithDefaultsListRec', 'fromClause', 'fullColumnName', 'function', 'functionCall', 'groupByClause', 'havingClause', 'insertFormat', 'insertKeyword', 'insertStatement', 'insertStatementRight', 'insertStatementValue', 'into', 'joinDirection', 'joinPart', 'joinParts', 'joinRightPart', 'logicalOperator', 'nullNotnull', 'nullOrTrueValue', 'nullValue', 'opposite', 'oppositeOrNot', 'orderByClause', 'predicate', 'predicateRight', 'querySpecification', 'root', 'selectClause', 'selectElement', 'selectElementHead', 'selectElementListRec', 'selectElements', 'selectStatement', 'stringLiteral', 'tableName', 'tableSource', 'tableSourceItem', 'tableSourceListRec', 'tableSources', 'trueValue', 'uid', 'uidList', 'uidListRec', 'unionStatement', 'unionStatementKey', 'unionStatementQuery', 'unionStatements', 'unionType', 'updatedElement', 'updatedElementListRec', 'updateStatement', 'whereExpression']
 
 FIRST:
 first_set[ ! ]  =   ['!']
@@ -154,43 +161,44 @@ first_set[ <=> ]  =   ['<=>']
 first_set[ = ]  =   ['=']
 first_set[ > ]  =   ['>']
 first_set[ >= ]  =   ['>=']
-first_set[ aggregateWindowedFunction ]  =   ['MIN', 'MAX', 'AVG', 'SUM']
+first_set[ aggregateWindowedFunction ]  =   ['MIN', 'SUM', 'MAX', 'AVG']
 first_set[ ALL ]  =   ['ALL']
 first_set[ AND ]  =   ['AND']
 first_set[ AS ]  =   ['AS']
 first_set[ AVG ]  =   ['AVG']
 first_set[ booleanLiteral ]  =   ['FALSE', 'TRUE']
-first_set[ comparisonOperator ]  =   ['<=>', '>', '>=', '!=', '<=', '=', '<']
-first_set[ constant ]  =   ['INT', 'TRUE', 'FALSE', 'STRING', '-', 'FLOAT']
-first_set[ decimalLiteral ]  =   ['INT', 'FLOAT']
+first_set[ comparisonOperator ]  =   ['>', '<=', '<', '!=', '<=>', '>=', '=']
+first_set[ constant ]  =   ['STRING', 'INT', 'FALSE', 'FLOAT', '-', 'TRUE']
+first_set[ decimalLiteral ]  =   ['FLOAT', 'INT']
 first_set[ DEFAULT ]  =   ['DEFAULT']
 first_set[ DELETE ]  =   ['DELETE']
 first_set[ deleteStatement ]  =   ['DELETE']
-first_set[ deleteStatementRight ]  =   ['$', '(', 'WHERE']
+first_set[ deleteStatementRight ]  =   ['WHERE', '(', '$']
 first_set[ DISTINCT ]  =   ['DISTINCT']
-first_set[ dmlStatement ]  =   ['SELECT', 'INSERT', 'DELETE', 'UPDATE', '(']
+first_set[ dmlStatement ]  =   ['DELETE', 'INSERT', '(', 'UPDATE', 'SELECT']
 first_set[ dottedId ]  =   ['$', '.']
-first_set[ elementNameAlias ]  =   ['$', 'IDN', 'AS']
-first_set[ expression ]  =   ['!', 'IDN', 'AVG', 'MIN', 'STRING', 'TRUE', 'FLOAT', 'MAX', 'INT', 'NOT', 'SUM', 'FALSE', '-']
-first_set[ expressionAtom ]  =   ['IDN', 'AVG', 'MIN', 'STRING', 'FLOAT', 'MAX', 'INT', 'TRUE', 'SUM', 'FALSE', '-']
-first_set[ expressionOrDefault ]  =   ['!', 'IDN', 'AVG', 'MIN', 'STRING', 'TRUE', 'FLOAT', 'DEFAULT', 'MAX', 'INT', 'NOT', 'SUM', 'FALSE', '-']
+first_set[ dottedIdOrStar ]  =   ['IDN', '*']
+first_set[ elementNameAlias ]  =   ['IDN', 'AS', '$']
+first_set[ expression ]  =   ['STRING', 'IDN', 'FALSE', 'SUM', 'MAX', 'TRUE', '!', 'AVG', 'INT', 'FLOAT', '-', 'MIN', 'NOT']
+first_set[ expressionAtom ]  =   ['STRING', 'IDN', 'FALSE', 'SUM', 'MAX', 'TRUE', 'AVG', 'INT', 'FLOAT', '-', 'MIN']
+first_set[ expressionOrDefault ]  =   ['STRING', 'IDN', 'FALSE', 'DEFAULT', 'SUM', 'MAX', 'TRUE', '!', 'AVG', 'INT', 'FLOAT', '-', 'MIN', 'NOT']
 first_set[ expressionOrDefaultListRec ]  =   [',', '$']
 first_set[ expressionRec ]  =   [',', '$']
-first_set[ expressionRight ]  =   ['&&', 'XOR', '||', 'OR', 'IS', '$', 'AND']
-first_set[ expressions ]  =   ['!', 'IDN', 'AVG', 'MIN', 'STRING', 'TRUE', 'FLOAT', 'MAX', 'INT', 'NOT', 'SUM', 'FALSE', '-']
-first_set[ expressionsWithDefaults ]  =   ['!', 'IDN', '$', 'AVG', 'MIN', 'STRING', 'TRUE', 'FLOAT', 'DEFAULT', 'MAX', 'INT', 'NOT', 'SUM', 'FALSE', '-']
+first_set[ expressionRight ]  =   ['AND', '||', '&&', 'XOR', '$', 'OR', 'IS']
+first_set[ expressions ]  =   ['STRING', 'IDN', 'FALSE', 'SUM', 'MAX', 'TRUE', '!', 'AVG', 'INT', 'FLOAT', '-', 'MIN', 'NOT']
+first_set[ expressionsWithDefaults ]  =   ['STRING', 'IDN', 'FALSE', 'DEFAULT', 'SUM', '$', 'MAX', 'TRUE', '!', 'AVG', 'INT', 'FLOAT', '-', 'MIN', 'NOT']
 first_set[ expressionsWithDefaultsListRec ]  =   [',', '$']
 first_set[ FALSE ]  =   ['FALSE']
 first_set[ FLOAT ]  =   ['FLOAT']
 first_set[ FROM ]  =   ['FROM']
-first_set[ fromClause ]  =   ['$', 'FROM']
+first_set[ fromClause ]  =   ['FROM', '$']
 first_set[ fullColumnName ]  =   ['IDN']
-first_set[ function ]  =   ['MIN', 'MAX', 'AVG', 'SUM']
-first_set[ functionCall ]  =   ['MIN', 'MAX', 'AVG', 'SUM']
+first_set[ function ]  =   ['MIN', 'SUM', 'MAX', 'AVG']
+first_set[ functionCall ]  =   ['MIN', 'SUM', 'MAX', 'AVG']
 first_set[ GROUP BY ]  =   ['GROUP BY']
 first_set[ groupByClause ]  =   ['$', 'GROUP BY']
 first_set[ HAVING ]  =   ['HAVING']
-first_set[ havingClause ]  =   ['$', 'HAVING']
+first_set[ havingClause ]  =   ['HAVING', '$']
 first_set[ IDN ]  =   ['IDN']
 first_set[ INSERT ]  =   ['INSERT']
 first_set[ insertFormat ]  =   ['VALUES', 'VALUE']
@@ -204,41 +212,45 @@ first_set[ into ]  =   ['$', 'INTO']
 first_set[ IS ]  =   ['IS']
 first_set[ JOIN ]  =   ['JOIN']
 first_set[ joinDirection ]  =   ['LEFT', 'RIGHT']
-first_set[ joinPart ]  =   ['JOIN', 'RIGHT', 'LEFT']
-first_set[ joinParts ]  =   ['$', 'JOIN', 'RIGHT', 'LEFT']
-first_set[ joinRightPart ]  =   ['$', 'ON']
+first_set[ joinPart ]  =   ['JOIN', 'LEFT', 'RIGHT']
+first_set[ joinParts ]  =   ['JOIN', 'LEFT', '$', 'RIGHT']
+first_set[ joinRightPart ]  =   ['ON', '$']
 first_set[ LEFT ]  =   ['LEFT']
-first_set[ logicalOperator ]  =   ['&&', 'XOR', '||', 'OR', 'AND']
+first_set[ logicalOperator ]  =   ['AND', '||', '&&', 'XOR', 'OR']
 first_set[ MAX ]  =   ['MAX']
 first_set[ MIN ]  =   ['MIN']
 first_set[ NOT ]  =   ['NOT']
+first_set[ NULL ]  =   ['NULL']
+first_set[ nullNotnull ]  =   ['NULL', '$', 'NOT']
+first_set[ nullOrTrueValue ]  =   ['NULL', 'FALSE', 'UNKNOWN', 'TRUE']
+first_set[ nullValue ]  =   ['NULL']
 first_set[ ON ]  =   ['ON']
 first_set[ opposite ]  =   ['!', 'NOT']
 first_set[ oppositeOrNot ]  =   ['$', 'NOT']
 first_set[ OR ]  =   ['OR']
 first_set[ ORDER BY ]  =   ['ORDER BY']
-first_set[ orderByClause ]  =   ['$', 'ORDER BY']
-first_set[ predicate ]  =   ['IDN', 'AVG', 'MIN', 'STRING', 'FLOAT', 'MAX', 'INT', 'TRUE', 'SUM', 'FALSE', '-']
-first_set[ predicateRight ]  =   ['<=>', '>', '>=', '!=', '$', '<=', '=', '<']
+first_set[ orderByClause ]  =   ['ORDER BY', '$']
+first_set[ predicate ]  =   ['STRING', 'IDN', 'FALSE', 'SUM', 'MAX', 'TRUE', 'AVG', 'INT', 'FLOAT', '-', 'MIN']
+first_set[ predicateRight ]  =   ['>', '<=', '<', '!=', '$', '<=>', '>=', '=']
 first_set[ querySpecification ]  =   ['(', 'SELECT']
 first_set[ RIGHT ]  =   ['RIGHT']
-first_set[ root ]  =   ['SELECT', 'INSERT', 'DELETE', 'UPDATE', '(']
+first_set[ root ]  =   ['DELETE', 'INSERT', '(', 'UPDATE', 'SELECT']
 first_set[ SELECT ]  =   ['SELECT']
-first_set[ selectClause ]  =   ['GROUP BY', 'ORDER BY', 'HAVING', '$', 'FROM']
-first_set[ selectElement ]  =   ['IDN', 'MAX', 'AVG', 'SUM', 'MIN']
-first_set[ selectElementHead ]  =   ['*', 'IDN', 'MAX', 'AVG', 'SUM', 'MIN']
+first_set[ selectClause ]  =   ['FROM', 'HAVING', 'ORDER BY', '$', 'GROUP BY']
+first_set[ selectElement ]  =   ['IDN', 'MAX', 'SUM', 'MIN', 'AVG']
+first_set[ selectElementHead ]  =   ['IDN', 'MIN', 'SUM', '*', 'MAX', 'AVG']
 first_set[ selectElementListRec ]  =   [',', '$']
-first_set[ selectElements ]  =   ['*', 'IDN', 'MAX', 'AVG', 'SUM', 'MIN']
+first_set[ selectElements ]  =   ['IDN', 'MIN', 'SUM', '*', 'MAX', 'AVG']
 first_set[ selectStatement ]  =   ['(', 'SELECT']
 first_set[ SET ]  =   ['SET']
 first_set[ STRING ]  =   ['STRING']
 first_set[ stringLiteral ]  =   ['STRING']
 first_set[ SUM ]  =   ['SUM']
 first_set[ tableName ]  =   ['IDN']
-first_set[ tableSource ]  =   ['(', 'IDN']
-first_set[ tableSourceItem ]  =   ['(', 'IDN']
+first_set[ tableSource ]  =   ['IDN', '(']
+first_set[ tableSourceItem ]  =   ['IDN', '(']
 first_set[ tableSourceListRec ]  =   [',', '$']
-first_set[ tableSources ]  =   ['(', 'IDN']
+first_set[ tableSources ]  =   ['IDN', '(']
 first_set[ TRUE ]  =   ['TRUE']
 first_set[ trueValue ]  =   ['FALSE', 'UNKNOWN', 'TRUE']
 first_set[ uid ]  =   ['IDN']
@@ -248,8 +260,8 @@ first_set[ UNION ]  =   ['UNION']
 first_set[ unionStatement ]  =   ['UNION']
 first_set[ unionStatementKey ]  =   ['UNION']
 first_set[ unionStatementQuery ]  =   ['(', 'SELECT']
-first_set[ unionStatements ]  =   ['$', 'UNION']
-first_set[ unionType ]  =   ['$', 'ALL', 'DISTINCT']
+first_set[ unionStatements ]  =   ['UNION', '$']
+first_set[ unionType ]  =   ['ALL', '$', 'DISTINCT']
 first_set[ UNKNOWN ]  =   ['UNKNOWN']
 first_set[ UPDATE ]  =   ['UPDATE']
 first_set[ updatedElement ]  =   ['IDN']
@@ -258,6 +270,6 @@ first_set[ updateStatement ]  =   ['UPDATE']
 first_set[ VALUE ]  =   ['VALUE']
 first_set[ VALUES ]  =   ['VALUES']
 first_set[ WHERE ]  =   ['WHERE']
-first_set[ whereExpression ]  =   ['$', 'WHERE']
+first_set[ whereExpression ]  =   ['WHERE', '$']
 first_set[ XOR ]  =   ['XOR']
 first_set[ || ]  =   ['||']
