@@ -1,3 +1,5 @@
+	syntax-multi-version.rar 为自动测试版 不必提交
+
 version--读取一个文件版
 
 输入文件：
